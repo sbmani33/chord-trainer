@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0e0e0e">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Chord Trainer">
+<link rel="manifest" href="manifest.json">
+<title>Chord Inversions Trainer</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#0e0e0e;--surface:#1a1a1a;--border:#2a2a2a;--text:#f0ede8;--muted:#666;--accent:#c8f060;--accent-dark:#9dc040}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100svh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem 1.25rem;gap:2.5rem}
+header{text-align:center}
+header h1{font-family:'DM Mono',monospace;font-size:13px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted)}
+.cards{display:flex;flex-direction:column;gap:10px;width:100%;max-width:360px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.25rem 1.5rem;display:flex;align-items:center;justify-content:space-between}
+.card.flash{border-color:var(--accent)}
+.card-label{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.card-value{font-family:'DM Mono',monospace;font-size:22px}
+.card-value.small{font-size:16px}
+.card-value.empty{color:var(--border)}
+.go-btn{width:100%;max-width:360px;padding:1.1rem;background:var(--accent);border:none;border-radius:14px;font-family:'DM Mono',monospace;font-size:19px}
+</style>
+</head>
+<body>
+<header><h1>Chord Inversions Trainer</h1></header>
+<div class="cards">
+<div class="card" id="card-note"><span class="card-label">Root note</span><span class="card-value empty" id="note">—</span></div>
+<div class="card" id="card-str"><span class="card-label">Root on string</span><span class="card-value empty" id="string">—</span></div>
+<div class="card" id="card-inv"><span class="card-label">Inversion</span><span class="card-value small empty" id="inversion">—</span></div>
+<div class="card" id="card-quality"><span class="card-label">Quality</span><span class="card-value small empty" id="quality">—</span></div>
+</div>
+<button class="go-btn" onclick="generate()">Generate</button>
+<script>
+const notes=['A','A♯/B♭','B','C','C♯/D♭','D','D♯/E♭','E','F','F♯/G♭','G','G♯/A♭'];
+const qualities=['Major','Minor','Augmented','Diminished'];
+const stringInversions={1:['First inversion'],2:['First inversion','Second inversion'],3:['Root position','First inversion','Second inversion'],4:['Root position','First inversion','Second inversion'],5:['Root position','Second inversion'],6:['Root position']};
+const pick=a=>a[Math.floor(Math.random()*a.length)];
+function flash(id){const e=document.getElementById(id);e.classList.add('flash');setTimeout(()=>e.classList.remove('flash'),300);}
+function generate(){
+['card-note','card-quality','card-inv','card-str'].forEach(flash);
+const str=Math.floor(Math.random()*6)+1;
+document.getElementById('note').textContent=pick(notes);
+document.getElementById('quality').textContent=pick(qualities);
+document.getElementById('string').textContent=str;
+document.getElementById('inversion').textContent=pick(stringInversions[str]);
+document.querySelectorAll('.card-value').forEach(e=>e.classList.remove('empty'));
+}
+if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js');}
+</script>
+</body></html>
